@@ -3,7 +3,7 @@ const labels={unknown:'ยังไม่มีข้อมูลล่าสุ
 const colors={unknown:'#87979f',clear:'#22966d',flood:'#dda822',closed:'#dc514d'};
 let reports={};
 async function api(url,options){const response=await fetch(url,options);const data=await response.json();if(!response.ok)throw Error(data.error||'ติดต่อระบบไม่ได้');return data}
-async function refreshReports(){const snapshot=await api('/api/reports');for(const [key,entries] of Object.entries(snapshot)){if(!reports[key]||entries[0]?.submittedAt>history(key)[0]?.submittedAt)reports[key]=entries}if(collection)decorate()}
+async function refreshReports(){const snapshot=await api('/api/reports');for(const key of Object.keys(reports)){if(!Object.hasOwn(snapshot,key))delete reports[key]}for(const [key,entries] of Object.entries(snapshot)){if(!reports[key]||entries[0]?.submittedAt>history(key)[0]?.submittedAt)reports[key]=entries}if(collection)decorate()}
 let reporterId;try{reporterId=localStorage.getItem('klaeng-demo-reporter-v1');if(!reporterId){reporterId=crypto.randomUUID();localStorage.setItem('klaeng-demo-reporter-v1',reporterId)}}catch{reporterId=crypto.randomUUID()}
 function history(key){const value=reports[key];return (Array.isArray(value)?value:value?[value]:[]).filter(r=>Number.isFinite(r.time)&&['clear','flood','closed'].includes(r.status)).slice().sort((a,b)=>b.time-a.time||(b.submittedAt||0)-(a.submittedAt||0))}
 let collection=null,selected=null,pinning=false;
