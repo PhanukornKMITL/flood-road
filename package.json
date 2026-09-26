@@ -8,7 +8,7 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "check": "node --check dist/app.js && node --check cloudflare/worker.mjs && wrangler deploy --dry-run",
-    "test": "node tests/api.mjs"
+    "test": "node tests/road-picking.mjs && node tests/api.mjs"
   },
   "engines": {
     "node": ">=22"
