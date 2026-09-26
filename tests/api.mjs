@@ -15,5 +15,12 @@ const detail=await(await fetch(base+'/api/roads/'+encodeURIComponent(road))).jso
 const snapshot=await(await fetch(base+'/api/reports')).json();assert.equal(snapshot[road][0].status,'flood');
 assert.equal((await send({...r,id:randomUUID(),time:Date.now()+60000})).status,400);assert.equal((await send({...r,id:randomUUID(),roadKey:'fake'})).status,400);assert.equal((await send({...r,id:randomUUID(),status:'safe'})).status,400);
 assert.equal((await fetch(base+'/api/reports',{method:'POST',headers:{Origin:'https://example.com','Content-Type':'application/json'},body:JSON.stringify(r)})).status,403);
+const oldRoad=JSON.parse(await readFile(new URL('../dist/roads.geojson',import.meta.url))).features[1].properties.key;
+const oldReport={...r,id:randomUUID(),reporterId:randomUUID(),roadKey:oldRoad,time:Date.now()-2*3600000,status:'closed'};
+assert.equal((await send(oldReport)).status,201);
+// Use a fresh bucket to avoid an earlier snapshot response in this test.
+const {execFileSync}=await import('node:child_process');
+const db=JSON.parse(execFileSync('npx',['wrangler','d1','execute','klaeng-road-reports','--local','--command',"SELECT status FROM road_latest WHERE road_key='"+oldRoad+"'",'--json'],{encoding:'utf8'}));
+assert.equal(db[0].results[0].status,'closed');
 console.log('PASS shared reports, unique reporters, timeline order, idempotency, invalid input and origin checks');
 }finally{if(child)process.kill(-child.pid,'SIGTERM');}

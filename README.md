@@ -1,5 +1,5 @@
 # flood-road — ทางบ้าน
-Mobile-first community flood road reports for Klaeng, Rayong. Real OpenStreetMap road segments with three reported states: cars can pass, cars cannot pass, closed/dangerous. Unknown or reports older than 60 minutes never imply safety.
+Mobile-first community flood road reports for Klaeng, Rayong. Real OpenStreetMap road segments with three reported states: cars can pass, cars cannot pass, closed/dangerous. Latest report colors remain visible after 60 minutes; details prominently show their age above the exact observation time. Reports are not automatically deleted after one hour. Unknown and reported states never guarantee safety.
 
 ## Cloudflare
 Static assets + Workers API + D1. No photo uploads or rescue request dispatch in v1. Reports are shared; reporter counts represent browser identities, not verified people. History shows the latest 100 reports per road with total report/browser counts. Map snapshots may lag by up to 30 seconds. Observation times can be up to 7 days old. A browser identity is limited to 30 reports/hour; this is a basic limit, not strong identity or bot verification.

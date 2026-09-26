@@ -8,7 +8,7 @@ if(url.pathname==='/health'){await env.DB.prepare('SELECT 1').first();return jso
 if(request.method==='GET'&&url.pathname==='/api/reports'){
 // Bucketed keys bound staleness to 30 seconds, even across edge cache entries.
 const cacheKey=new Request(url.origin+'/api/snapshot?bucket='+Math.floor(Date.now()/30000));const cache=caches.default;const hit=await cache.match(cacheKey);if(hit)return hit;
-const {results}=await env.DB.prepare('SELECT * FROM road_latest WHERE observed_at>=?').bind(Date.now()-3600000).all();const data={};for(const r of results)data[r.road_key]=[entry(r)];const response=json(data,200,{'Cache-Control':'public,max-age=30'});ctx.waitUntil(cache.put(cacheKey,response.clone()));return response}
+const {results}=await env.DB.prepare('SELECT * FROM road_latest').all();const data={};for(const r of results)data[r.road_key]=[entry(r)];const response=json(data,200,{'Cache-Control':'public,max-age=30'});ctx.waitUntil(cache.put(cacheKey,response.clone()));return response}
 if(request.method==='GET'&&url.pathname.startsWith('/api/roads/')){const key=decodeURIComponent(url.pathname.slice(11));if(!keys.has(key))return json({error:'ไม่พบถนน'},404);
 const {results}=await env.DB.prepare('SELECT * FROM road_reports WHERE road_key=? ORDER BY observed_at DESC,submitted_at DESC LIMIT 100').bind(key).all();const count=await env.DB.prepare('SELECT count(*) AS reportCount,count(DISTINCT reporter_id) AS reporterCount FROM road_reports WHERE road_key=?').bind(key).first();return json({...count,reports:results.map(entry)})}
 if(request.method==='POST'&&url.pathname==='/api/reports'){
