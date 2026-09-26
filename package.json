@@ -1,0 +1,19 @@
+{
+  "name": "klaeng-road",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "wrangler dev",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "check": "node --check dist/app.js && node --check cloudflare/worker.mjs && wrangler deploy --dry-run",
+    "test": "node tests/api.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "wrangler": "4.141.0"
+  }
+}
