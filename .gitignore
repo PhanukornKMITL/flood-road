@@ -5,3 +5,5 @@ node_modules/
 .railway/
 .openai/
 .wrangler/
+
+.cloudflare-ci-token
