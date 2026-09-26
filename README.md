@@ -26,6 +26,6 @@ npm run deploy
 Deployment targets the account and D1 database named in wrangler.jsonc. API tests write only local data. Never run tests against production.
 
 ## GitHub CI/CD
-Pull requests run packaging and local D1 API integration checks. Pushes to main deploy after checks pass. Set repository Actions secrets `CLOUDFLARE_API_TOKEN` (account-scoped Workers Scripts Edit and D1 Edit with required account read access) and `CLOUDFLARE_ACCOUNT_ID`. Never commit tokens. GitHub Actions does not reuse local Wrangler OAuth login.
+Pull requests run packaging and local D1 API integration checks. Pushes to main deploy after checks pass. Set repository Actions secrets `CLOUDFLARE_API_TOKEN` (account-scoped Workers Scripts Edit and D1 Edit with required account read access) (account ID is already in configuration). Never commit tokens. GitHub Actions does not reuse local Wrangler OAuth login.
 
 Free quotas are not an uptime guarantee. API traffic and D1 rows read/written must be monitored. No paid plan or R2 subscription is required by this version.
